@@ -1,11 +1,11 @@
 import streamlit as st
-from backend_langgraph import chatbot
+from backend_langgraph import chatbot, retrive_all_threads
 from langchain_core.messages import HumanMessage
 import uuid
 
 
 
-# ************************************* Utility/Helper functions *************************************
+# ********************************************* Utility/Helper functions *********************************************
 def generate_thread_id():
     thread_id = uuid.uuid4()
     return str(thread_id)
@@ -30,7 +30,7 @@ def load_conversation(thread_id):                       # get history from langg
 
 
 
-# ************************************* Session Setup *************************************
+# ********************************************* Session Setup *********************************************
 
 # session_state -> dict ,  it does not trunckat when we hit enter in chat message
 if 'message_history' not in st.session_state:
@@ -42,7 +42,7 @@ if 'thread_id' not in st.session_state:
 
 
 if 'chat_threads' not in st.session_state:      # list of threads
-    st.session_state['chat_threads'] = []
+    st.session_state['chat_threads'] = retrive_all_threads()
 
 
 add_thread(st.session_state['thread_id'])   # 1st time
@@ -53,7 +53,7 @@ CONFIG = {'configurable': {'thread_id': st.session_state['thread_id']}}
 
 
 
-# ************************************* Sidebar *************************************
+# ********************************************* Sidebar *********************************************
 st.sidebar.title('AI Assistant')
 
 if st.sidebar.button('New Chat'):
@@ -87,7 +87,7 @@ for thread_id in st.session_state['chat_threads'][::-1]:        # load all threa
 
 
 
-# ************************************* Main UI *************************************
+# ********************************************* Main UI *********************************************
 
 # load current conversation history
 if st.session_state['message_history']:

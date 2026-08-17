@@ -23,12 +23,12 @@ from Projects.chatbot.backend_langgraph import chatbot
 CONFIG = {'configurable': {'thread_id': '1'}}
 
 response = chatbot.invoke(
-    {'messages': [HumanMessage(content="My name is Ahmad")]},
+    {'messages': [HumanMessage(content="can you list our conversation history?")]},
     config=CONFIG,
 )
-# print(response["messages"][-1].text)
-print(response)
+print(response["messages"][-1].text)
+# print(response)
 
 print(end='\n\n\n')
 
-print(chatbot.get_state(config = CONFIG).values['messages'])
+# print(chatbot.get_state(config = CONFIG).values['messages'])
