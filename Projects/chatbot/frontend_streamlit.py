@@ -18,10 +18,13 @@ def add_thread(thread_id):
 
 
 def reset_chat():
+    st.session_state['message_history'] = []
+
+
+def start_new_thread():
     new_thread_id = generate_thread_id()                # generate new thread id
     st.session_state['thread_id'] = new_thread_id       # store in session
     add_thread(st.session_state['thread_id'])           # append in session list whenever New Chat button clicked
-    st.session_state['message_history'] = []
 
 
 
@@ -37,18 +40,16 @@ if 'message_history' not in st.session_state:
     st.session_state['message_history'] = []
 
 
-if 'thread_id' not in st.session_state:
-    st.session_state['thread_id'] = generate_thread_id()
+# if 'thread_id' not in st.session_state:       # thread_id got set when new chat start not here
+#     st.session_state['thread_id'] = generate_thread_id()
 
 
 if 'chat_threads' not in st.session_state:      # list of threads
     st.session_state['chat_threads'] = retrive_all_threads()
 
 
-add_thread(st.session_state['thread_id'])   # 1st time
 
 
-CONFIG = {'configurable': {'thread_id': st.session_state['thread_id']}}
 
 
 
@@ -100,6 +101,10 @@ user_input = st.chat_input("Ask anything")
 
 
 if user_input:
+    if not st.session_state['message_history']:
+        start_new_thread()
+
+    CONFIG = {'configurable': {'thread_id': st.session_state['thread_id']}}
     # user 
     st.session_state['message_history'].append({'role': 'user', 'content': user_input})
     with st.chat_message('user'):
@@ -120,3 +125,4 @@ if user_input:
         )
 
     st.session_state['message_history'].append({'role': 'assistant', 'content': assistent_output})
+    st.rerun()      # if new thread is created it refresh the window to display new chat in sidebar
